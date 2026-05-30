@@ -1,5 +1,7 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
 
 from app import models
 from app.database import engine
@@ -10,14 +12,21 @@ from app.routers import (
     items_router,
 )
 
+load_dotenv()
+
 # ── App setup ─────────────────────────────────────────────────────────────────
 
 app = FastAPI(title="InvenTrack API")
 
 # CORS middleware — must be added BEFORE route definitions
+allowed_origins = os.getenv(
+    "ALLOWED_ORIGINS",
+    "http://localhost:3000,http://localhost:5173,https://nisan-inventory.vercel.app",
+).split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
