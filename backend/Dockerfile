@@ -13,10 +13,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy and install Python dependencies
+# Copy and install Python dependencies as root
 COPY requirements.txt .
-RUN pip install --upgrade pip && \
-    pip install -r requirements.txt
+RUN pip install --upgrade pip --root-user-action=ignore && \
+    pip install -r requirements.txt --root-user-action=ignore
 
 # Copy application code
 COPY . .
